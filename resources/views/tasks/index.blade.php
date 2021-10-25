@@ -8,6 +8,7 @@
     @include('common.errors')
 
     </div>
+    <a href="{{route('tasks.create')}}" class="btn btn-success"><i class="fa fa-plus"></i> Crete new task</a>
 
     <!-- TODO: Текущие задачи -->
 @endsection
