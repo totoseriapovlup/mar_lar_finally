@@ -16,13 +16,32 @@ Route::get('/', function () {
 });
 
 Route::get('/tasks',function (){
-    return view('tasks.index');
+    $tasks = \App\Models\Task::all();
+    return view('tasks.index',
+        [
+            'tasks'=>$tasks,
+        ]);
 })->name('tasks.index');
 
 Route::get('/tasks/create',function (){
     return view('tasks.create');
 })->name('tasks.create');
 
-Route::post('/tasks',function (){
-    //TODO STORE
+Route::post('/tasks',function (\Illuminate\Http\Request $request){
+    $validator = Validator::make($request->all(), [
+        'name' => 'required|max:255',
+    ]);
+
+    if ($validator->fails()) {
+        return redirect(route('tasks.create'))
+            ->withInput()
+            ->withErrors($validator);
+    }
+
+    $task = new \App\Models\Task();
+    $task->name = $request->name;
+    $task->save();
+
+    return redirect(route('tasks.index'));
+
 })->name('tasks.store');

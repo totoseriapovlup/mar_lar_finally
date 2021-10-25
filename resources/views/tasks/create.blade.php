@@ -13,7 +13,7 @@
             <div class="form-group">
                 <label for="task" class="col-sm-3 control-label">Задача</label>
                 <div class="col-sm-6">
-                    <input type="text" name="name" id="task" class="form-control">
+                    <input type="text" name="name" id="task" class="form-control" value="{{old('name')}}">
                 </div>
             </div>
             <!-- Кнопка добавления задачи -->
@@ -26,7 +26,4 @@
             </div>
         </form>
     </div>
-    <a href="{{route('tasks.create')}}" class="btn btn-success"><i class="fa fa-plus"></i> Crete new task</a>
-
-    <!-- TODO: Текущие задачи -->
 @endsection
