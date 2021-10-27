@@ -15,19 +15,19 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/tasks',function (){
+Route::get('/tasks', function () {
     $tasks = \App\Models\Task::all();
     return view('tasks.index',
         [
-            'tasks'=>$tasks,
+            'tasks' => $tasks,
         ]);
 })->name('tasks.index');
 
-Route::get('/tasks/create',function (){
+Route::get('/tasks/create', function () {
     return view('tasks.create');
 })->name('tasks.create');
 
-Route::post('/tasks',function (\Illuminate\Http\Request $request){
+Route::post('/tasks', function (\Illuminate\Http\Request $request) {
     $validator = Validator::make($request->all(), [
         'name' => 'required|max:255',
     ]);
@@ -45,3 +45,34 @@ Route::post('/tasks',function (\Illuminate\Http\Request $request){
     return redirect(route('tasks.index'));
 
 })->name('tasks.store');
+
+Route::delete('/tasks/{task}', function (\App\Models\Task $task) {
+    $task->delete();
+    return redirect(route('tasks.index'));
+})->name('tasks.delete');
+
+Route::get('/tasks/{task}/edit', function (\App\Models\Task $task) {
+    return view('tasks.edit', [
+        'task' => $task,
+    ]);
+})->name('tasks.edit');
+
+Route::put('/tasks/{task}', function (\Illuminate\Http\Request $request, \App\Models\Task $task) {
+    $validator = Validator::make($request->all(), [
+        'name' => 'required|max:255',
+    ]);
+
+    if ($validator->fails()) {
+        return redirect(route('tasks.edit', $task->id))
+            ->withInput()
+            ->withErrors($validator);
+    }
+
+    $task->name = $request->name;
+    $task->save();
+
+    return redirect(route('tasks.index'));
+
+})->name('tasks.update');
+
+
